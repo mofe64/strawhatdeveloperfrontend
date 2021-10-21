@@ -1,0 +1,29 @@
+.post-rte-container {
+  margin-top: 3rem;
+}
+.post-rte-container button {
+  border: none;
+  outline: none;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  background: black;
+  color: white;
+  border-radius: 3px;
+  font-size: 1rem;
+}
+.preview-header {
+  border-bottom: 2px solid #e6e6e6;
+  margin-bottom: 2rem;
+  margin-top: 2rem;
+}
+.preview-action {
+  margin-right: 2rem;
+}
+.preview-draft {
+  background-color: #fcf3e4 !important;
+  color: black !important;
+}

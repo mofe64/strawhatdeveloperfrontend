@@ -1,0 +1,74 @@
+.subscribe-div {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.sub-box {
+  padding-top: 2rem;
+  border: 2px solid #e6e6e6;
+  border-radius: 3px;
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  background-color: #fcf3e4;
+  padding-bottom: 2rem;
+}
+.sub-header {
+  font-size: 1.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+.sub-body {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+.sub-body input {
+  outline: none;
+  border: none;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+  height: 30px;
+  width: 40%;
+  padding-left: 2rem;
+}
+.sub-box button {
+  outline: none;
+  border: none;
+  background: black;
+  color: white;
+  height: 25px;
+  width: 60px;
+  cursor: pointer;
+  transition: transform 330ms ease-in-out;
+}
+
+.sub-box button:hover {
+  transform: scale(1.05);
+}
+
+@media (max-width: 1020px) {
+  .sub-box {
+    width: 70%;
+  }
+  .sub-header {
+    font-size: 1rem;
+  }
+  .sub-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .sub-body input {
+    margin-bottom: 1rem;
+    width: 80%;
+  }
+}
+
+@media (max-width: 650px) {
+  .sub-box {
+    width: 80%;
+  }
+}
