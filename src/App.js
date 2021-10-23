@@ -15,14 +15,14 @@ function App() {
     <>
       <Switch>
         <Route exact path='/' component={Home} />
-        <Route exact path='/post' component={Post} />
+        <Route exact path='/post/:slug' component={Post} />
         <Route exact path='/about' component={About} />
         <Route exact path='/portfolio' component={Portfolio} />
         <Route exact path='/search' component={Search} />
         <Route exact path='/admin/createpost' component={CreatePost} />
         <Route exact path='/admin/drafts' component={Drafts} />
         <Route exact path='/admin/all' component={AllPosts} />
-        <Route exact path='/admin/update' component={UpdatePost} />
+        <Route exact path='/admin/update/:slug' component={UpdatePost} />
       </Switch>
    </>   
   );

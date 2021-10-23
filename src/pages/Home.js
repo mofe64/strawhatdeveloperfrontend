@@ -6,8 +6,11 @@ import Subscribe from "../components/Subscribe";
 import '../css/pages/Home.css';
 import LoadingAnimation from "../components/LoadingAnimation";
 import {getAllPosts } from '../actions/postActions';
+import { useHistory } from 'react-router-dom';
+
 
 const Home = function () {
+    const history = useHistory();
     const [page, setPage] = useState(1);
     const [posts, setPosts] = useState([]);
     const [dataLoaded, setDataLoaded] = useState(false);
@@ -23,6 +26,10 @@ const Home = function () {
                 console.log('error caught ')
             });
     }, [page]);
+
+    const goToPost = (slug) => {
+        history.push(`post/${slug}`);
+    };
 
     if (!dataLoaded) {
         return (
@@ -56,8 +63,13 @@ const Home = function () {
             <Header/>
             <div className='wrapper thumbnail-rack'>
                 {posts.map((post, index) => {
-                    console.log(posts);
-                    return <Thumbnail key={index}/>
+                    return <Thumbnail
+                        key={index}
+                        post={post}
+                        goToFunction={() => {
+                            goToPost(post['slug'])
+                        }}
+                    />
                 })}
             </div>
             <Subscribe/>

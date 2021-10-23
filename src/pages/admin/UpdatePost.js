@@ -1,17 +1,39 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Editor } from '@tinymce/tinymce-react';
 import AdminHeader from "../../components/AdminHeader";
 import Footer from "../../components/Footer";
 import DOMPurify from 'dompurify';
 import '../../css/pages/admin/CreatePost.css';
+import { updatePost,getAPost } from '../../actions/postActions';
+import { useHistory } from 'react-router-dom';
+import LoadingAnimation from "../../components/LoadingAnimation";
 // eslint-disable-next-line
 import Prisim from 'prismjs';
 
 
-const UpdatePost = function () {
-    const postToUpdate = "<p>This is the initial content of the editor.</p>"
+const UpdatePost = function ({ match }) {
+    const history = useHistory();
+    const [postSlug] = useState(match.params.slug);
+    const [postToUpdate,setPostToUpdate] = useState({})
     const editorRef = useRef(null);
-    const [value, setValue] = useState(postToUpdate);
+    const [loading, setLoading] = useState(false);
+    const [value, setValue] = useState('');
+
+    const getPostToEdit = useCallback(async () => {
+        setLoading(true);
+        getAPost(postSlug)
+            .then((data) => {
+                const postToEdit = data['post'];
+                setPostToUpdate(postToEdit);
+            })
+            .then(() => { setLoading(false) })
+            .catch(err => { console.log(err) });
+    },[postSlug])
+    const updatePostValues = (key, value) => {
+        const updated = { ...postToUpdate };
+        updated[key] = value;
+        setPostToUpdate(updated);
+    }
     const log = () => {
         if (editorRef.current) {
             const htmlString = editorRef.current.getContent();
@@ -19,16 +41,103 @@ const UpdatePost = function () {
             console.log(editorRef.current.getContent());
         }
     };
+    const publishToDrafts = async () => {
+        const post = {
+            title: postToUpdate['title'],
+            preview: postToUpdate['preview'],
+            body: value,
+            tags: postToUpdate['tags'],
+            draft: true
+        };
+        setLoading(true);
+        updatePost(postSlug,post).then(() => {
+            setLoading(false);
+            history.push('/admin/drafts')
+        });
+    }
+
+    const publishLive = async () => {
+        const post = {
+           title: postToUpdate['title'],
+            preview: postToUpdate['preview'],
+            body: value,
+            tags: postToUpdate['tags'],
+            draft: false
+        };
+        setLoading(true);
+        updatePost(postSlug,post).then(() => {
+            setLoading(false);
+            history.push('/admin/all')
+        });
+    }
+    useEffect(() => {
+        getPostToEdit();
+    },[getPostToEdit])
+    if (loading) {
+        return (
+            <>
+                <AdminHeader/>
+                <div className='wrapper'>
+                    <div className='post-rte-container'>
+                        <h1>Create Post</h1>
+                        <LoadingAnimation/>
+                    </div>
+                </div>
+            </>
+        )
+    }
     return (
         <>
             <AdminHeader/>
             <div className='wrapper'>
                 <div className='post-rte-container'>
-                    <h1>Create Post</h1>
+                    <h1>Update Post</h1>
+                     <div className='post-details'>
+                        <div className='post-title'>
+                            <label>
+                                <p> Title </p>    
+                            </label>
+                            <input
+                                type='text'
+                                value={postToUpdate['title']}
+                                placeholder='Post Title'
+                                onChange={(e) => {
+                                    updatePostValues('title', e.target.value);
+                                }}
+                            />
+                        </div>
+                        <div className='post-title'>
+                            <label>
+                                <p> Tags (comma seperated) </p>    
+                            </label>
+                            <input
+                                type='text'
+                                placeholder='Post Tag'
+                                value={postToUpdate['tags']}
+                                onChange={(e) => {
+                                    updatePostValues('tags', e.target.value);
+                                }}
+                            />
+                        </div>
+                        <div>
+                            <label>
+                                <p>
+                                    Intro Text
+                                </p>
+                            </label>
+                            <textarea
+                                placeholder='Short Intro text'
+                                value={postToUpdate['preview']}
+                                onChange={(e) => {
+                                    updatePostValues('preview', e.target.value);
+                                }}
+                            />
+                        </div>  
+                    </div>
                     <Editor
                         onInit={(evt, editor) => editorRef.current = editor}
                         apiKey='8d70t180vjz98lqcpzn1p79fydbhgghd89rby8ela9cd6ts0'
-                        initialValue={postToUpdate}
+                        initialValue={postToUpdate['body']}
                         init={{
                             height: 500,
                             menubar: 'tools',
@@ -52,10 +161,16 @@ const UpdatePost = function () {
                         
                         {(value === '') ? <h1>Nothing yet</h1> : <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(value) }}></div>}
                         <div className='preview-actions'>
-                             <button className='preview-draft preview-action'>
+                            <button
+                                className='preview-draft preview-action'
+                                onClick={publishToDrafts}
+                            >
                                 Publish to Drafts
                             </button>
-                            <button className='preview-publish preview-action'>
+                            <button
+                                className='preview-publish preview-action'
+                                onClick={publishLive}
+                            >
                                 Publish Live
                             </button>
                         </div>

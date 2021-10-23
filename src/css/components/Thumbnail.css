@@ -6,15 +6,24 @@
 .thumbnail-header {
   cursor: pointer;
 }
+.thumbnail-header h2 {
+  font-size: 2rem;
+}
 .thumbnail-meta {
   display: flex;
 }
+.thumbnail-meta p {
+  font-size: 1rem;
+}
 .thumbnail-date {
-  margin-right: 1rem;
+  margin-right: 0.51rem;
 }
 .thumbnail-tag {
   cursor: pointer;
 }
 .thumbnail-tag:hover {
   color: red;
+}
+.thumbnail-body p {
+  font-size: 1.5rem;
 }

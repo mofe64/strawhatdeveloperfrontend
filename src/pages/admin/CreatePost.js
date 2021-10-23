@@ -122,12 +122,12 @@ const CreatePost = function () {
                             plugins: [
                                 'advlist autolink lists link image charmap print preview anchor',
                                 'searchreplace visualblocks code fullscreen',
-                                'insertdatetime media table paste code help wordcount codesample'
+                                'insertdatetime media table paste code help wordcount codesample emoticons'
                             ],
                             toolbar: 'undo redo | formatselect | ' +
                                 'bold italic backcolor | alignleft aligncenter ' +
                                 'alignright alignjustify | bullist numlist outdent indent | ' +
-                                'removeformat | help | code | codesample' ,
+                                'removeformat | help | code | codesample emoticons' ,
                             content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
                         }}
                     />

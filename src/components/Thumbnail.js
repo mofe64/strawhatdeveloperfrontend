@@ -1,17 +1,34 @@
 import '../css/components/Thumbnail.css';
-const Thumbnail = ({goToFunction=f=>f}) => {
+import moment from "moment";
+const Thumbnail = ({goToFunction=f=>f, post={}}) => {
     return (
         <div className='thumbnail'>
             <div className='thumbnail-header'>
-                <h2 onClick={goToFunction}>Setting up a Decentralized Website (ENS + IPFS =dWeb)</h2>
+                <h2 onClick={goToFunction}>{post['title']}</h2>
                 <div className='thumbnail-meta'>
-                    <p className='thumbnail-date'>jun 18, 2021</p>
-                    <p className='thumbnail-tag'>  &#x2615; web3</p>
+                    <p className='thumbnail-date'>
+                        {moment(post['createdAt']).format('MMMM Do YYYY')}
+                    </p>
+                    ☕
+                    {
+                        post['tags'].map((tag, index) => {
+                            return (
+                                <p className='thumbnail-tag'
+                                    key={index}
+                                >
+                                    {
+                                       (index !== (post['tags'].length -1)? `${tag},`: tag)
+                                    }
+                                </p>
+                            );               
+                       })
+                    }
+                    
                 </div>
             </div>
             <div className='thumbnail-body'>
                 <p>
-                    One thing that I’ve been really into lately has been ENS names. As someone who’s already obsessed with buying domain names, ENS names have been an even greater obsession (mostly because of emoji names, like ✊🏾✊🏾✊🏾.eth)! So what are ENS names, exactly? And what is a “decentralised website”..
+                    {post['preview']}
                 </p>
             </div>
         </div>

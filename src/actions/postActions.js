@@ -16,6 +16,15 @@ export const getAllPosts = async (page = 1) => {
     return posts;
 };
 
+export const getAllDrafts = async (page = 1) => {
+    let url;
+    page === 1 ? url = postRouteStaging + '/drafts' : url = postRouteStaging + `/drafts?page=${page}`;
+    const response = await axios.get(url);
+    const posts = await response.data;
+    return posts;
+    
+};
+
 export const getAPost = async  (slug = 'welcome') => {
     let url = postRouteStaging;
     url = url + '/' + slug;
@@ -47,3 +56,14 @@ export const search = async (query = 'backend development', page = 1) => {
     return posts;
 
 };
+
+export const updatePost = async (slug = 'welcome', details) => {
+    if (!details) {
+        return;
+    }
+    let url = postRouteStaging;
+    url = url + '/' + slug;
+    const response = await axios.patch(url,details);
+    const post = await response.data;
+    return post;
+}
