@@ -1,6 +1,41 @@
 .post-rte-container {
   margin-top: 3rem;
 }
+.post-details {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+}
+.post-details input {
+  outline: none;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  border-radius: 4px;
+  margin-bottom: 2rem;
+}
+.post-details input::placeholder {
+  font-size: 1rem;
+}
+.post-title {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+label p {
+  margin-left: 2px;
+  font-size: 1rem;
+}
+.post-details textarea {
+  width: 100%;
+  min-height: 100px;
+  border-radius: 4px;
+  outline: none;
+}
+.post-details textarea::placeholder {
+  font-size: 1rem;
+}
+
 .post-rte-container button {
   border: none;
   outline: none;
@@ -14,6 +49,11 @@
   color: white;
   border-radius: 3px;
   font-size: 1rem;
+  cursor: pointer;
+  transition: all 330ms ease-in-out;
+}
+.post-rte-container button:hover {
+  transform: scale(1.1);
 }
 .preview-header {
   border-bottom: 2px solid #e6e6e6;
