@@ -7,11 +7,12 @@ import LoadingAnimation from "../../components/LoadingAnimation";
 import '../../css/pages/admin/Drafts.css'
 import {getAllDrafts } from '../../actions/postActions';
 
+let totalPosts;
 const Drafts = function () {
     const history = useHistory();
     let preLoadedDrafts = JSON.parse(window.sessionStorage.getItem('drafts'))
     if (!preLoadedDrafts) {
-        preLoadedDrafts = [];
+        preLoadedDrafts = null;
     }
     const [page, setPage] = useState(1);
     const [posts, setPosts] = useState(preLoadedDrafts);
@@ -40,6 +41,18 @@ const Drafts = function () {
         loadPosts();
     }, [loadPosts]);
 
+    const hasNextPage = () => {
+        const totalCount = totalPosts;
+        const pageContent = 20;
+        const contentLoadedSoFar = page * pageContent
+        const remainder = totalCount - contentLoadedSoFar;
+        return remainder > 0;
+    };
+
+    const goToNextPage = () => {
+        const nextPage = page + 1;
+        setPage(nextPage);
+    }
     if (!dataLoaded) {
         return (
             <>
@@ -53,7 +66,7 @@ const Drafts = function () {
         );
     };
 
-    if (posts.length === 0) {
+    if (!posts || posts.length === 0) {
         return (
             <>
                 <AdminHeader />
@@ -89,7 +102,16 @@ const Drafts = function () {
                         }}
                         post={post}
                     />
-                })} 
+                })}
+                <div className='pagination'
+                style={(hasNextPage())?{display: 'block'}:{display: 'none'}}
+                >
+                    <button
+                        onClick={goToNextPage}
+                    >
+                        next page
+                    </button>
+                </div>
             </div>
             <Footer />
         </>

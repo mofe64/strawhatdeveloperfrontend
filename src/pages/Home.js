@@ -8,17 +8,19 @@ import LoadingAnimation from "../components/LoadingAnimation";
 import {getAllPosts } from '../actions/postActions';
 import { useHistory } from 'react-router-dom';
 
-
+let totalPosts;
 const Home = function () {
+   
     const history = useHistory();
     let preLoadedPosts = JSON.parse(window.sessionStorage.getItem('allposts'));
     if (!preLoadedPosts) {
-        preLoadedPosts = [];
+        preLoadedPosts = null;
     }
     // console.log( preLoadedPosts);
     const [page, setPage] = useState(1);
     const [posts, setPosts] = useState(preLoadedPosts);
     const [dataLoaded, setDataLoaded] = useState(true);
+
     const loadPosts = useCallback(async () => {
         if (!preLoadedPosts) {
             setDataLoaded(false);
@@ -26,6 +28,7 @@ const Home = function () {
                 .then((data) => {
                     console.log("making api call")
                     window.sessionStorage.setItem('allposts', JSON.stringify(data['posts']))
+                    totalPosts = data['count'];
                     setPosts(data['posts']);
                 })
                 .then(() => { setDataLoaded(true); })
@@ -41,6 +44,17 @@ const Home = function () {
     const goToPost = (slug) => {
         history.push(`post/${slug}`);
     };
+    const hasNextPage = () => {
+        const totalCount = totalPosts;
+        const pageContent = 20;
+        const contentLoadedSoFar = page * pageContent
+        const remainder = totalCount - contentLoadedSoFar;
+        return remainder > 0;
+    };
+    const goToNextPage = () => {
+        const nextPage = page + 1;
+        setPage(nextPage);
+    }
 
     if (!dataLoaded) {
         return (
@@ -54,7 +68,7 @@ const Home = function () {
             </>
         );
     }
-    if (posts.length === 0) {
+    if (!posts || posts.length === 0) {
         return (
             <>
                 <Header />
@@ -82,7 +96,22 @@ const Home = function () {
                         }}
                     />
                 })}
+                <div className='pagination'
+                    
+                style={(hasNextPage())?{display: 'block'}:{display: 'none'}}
+                >
+                    <button
+                        onClick={() => {
+                            console.log("total posts from be")
+                            console.log(totalPosts)
+                            goToNextPage()
+                        }}
+                    >
+                        next page
+                    </button>
+                </div>
             </div>
+           
             <Subscribe/>
             <Footer/>
         </>
