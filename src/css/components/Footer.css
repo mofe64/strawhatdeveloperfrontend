@@ -1,0 +1,22 @@
+.footer-container {
+  margin-top: 2rem;
+  padding-top: 3rem;
+  padding-bottom: 2rem;
+  border-top: 2px solid #e6e6e6;
+  text-align: center;
+}
+.footer-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.footer-links {
+  margin-top: 0.5rem;
+}
+.footer-links a {
+  margin-right: 1rem;
+  margin-left: 1rem;
+  text-decoration: none;
+  color: black;
+}

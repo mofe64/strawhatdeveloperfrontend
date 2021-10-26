@@ -1,0 +1,29 @@
+.thumbnail {
+  border-bottom: 2px solid #e6e6e6;
+  padding-top: 3rem;
+  padding-bottom: 2rem;
+}
+.thumbnail-header {
+  cursor: pointer;
+}
+.thumbnail-header h2 {
+  font-size: 2rem;
+}
+.thumbnail-meta {
+  display: flex;
+}
+.thumbnail-meta p {
+  font-size: 1rem;
+}
+.thumbnail-date {
+  margin-right: 0.51rem;
+}
+.thumbnail-tag {
+  cursor: pointer;
+}
+.thumbnail-tag:hover {
+  color: red;
+}
+.thumbnail-body p {
+  font-size: 1.5rem;
+}
