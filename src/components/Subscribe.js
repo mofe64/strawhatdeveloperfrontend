@@ -3,12 +3,14 @@ import '../css/components/Subscribe.css';
 import { subscribe } from '../actions/subscribeActions';
 
 const Subscribe = () => {
-    const hasSubbedCheck = window.sessionStorage.getItem('strawhatdev-subbed');;
+    const hasSubbedCheck = window.sessionStorage.getItem('strawhatdev-subbed');
+    const hasDismissedCheck = window.sessionStorage.getItem('hasDismissed');
     const [hasSubbed, setHasSubbed] = useState(hasSubbedCheck);
-    const [confirmed, setConfirmed] = useState(false);
+    const [confirmed, setConfirmed] = useState(hasDismissedCheck);
     const [firstname, setfirstname] = useState('');
     const [email, setEmail] = useState('');
     const dismiss = () => {
+        window.sessionStorage.setItem('hasDismissed',true)
         setConfirmed(true);
     };
 
