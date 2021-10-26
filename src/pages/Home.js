@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import Header from "../components/Header";
 import Thumbnail from "../components/Thumbnail";
 import Footer from "../components/Footer";
@@ -11,21 +11,32 @@ import { useHistory } from 'react-router-dom';
 
 const Home = function () {
     const history = useHistory();
+    let preLoadedPosts = JSON.parse(window.sessionStorage.getItem('allposts'));
+    if (!preLoadedPosts) {
+        preLoadedPosts = [];
+    }
+    // console.log( preLoadedPosts);
     const [page, setPage] = useState(1);
-    const [posts, setPosts] = useState([]);
-    const [dataLoaded, setDataLoaded] = useState(false);
-
+    const [posts, setPosts] = useState(preLoadedPosts);
+    const [dataLoaded, setDataLoaded] = useState(true);
+    const loadPosts = useCallback(async () => {
+        if (!preLoadedPosts) {
+            setDataLoaded(false);
+            getAllPosts(page)
+                .then((data) => {
+                    console.log("making api call")
+                    window.sessionStorage.setItem('allposts', JSON.stringify(data['posts']))
+                    setPosts(data['posts']);
+                })
+                .then(() => { setDataLoaded(true); })
+                .catch(() => {
+                    console.log('error caught ')
+                });
+            }
+    },[page,preLoadedPosts])
     useEffect(() => {
-        setDataLoaded(false);
-        getAllPosts(page)
-            .then((data) => {
-                setPosts(data['posts']);
-            })
-            .then(() => { setDataLoaded(true); })
-            .catch(() => {
-                console.log('error caught ')
-            });
-    }, [page]);
+        loadPosts();
+    }, [loadPosts]);
 
     const goToPost = (slug) => {
         history.push(`post/${slug}`);

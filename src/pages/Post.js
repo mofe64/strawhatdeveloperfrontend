@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useCallback} from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import { getAPost } from '../actions/postActions';
@@ -9,22 +9,37 @@ import moment from 'moment';
 import Subscribe from "../components/Subscribe";
 
 const Post = function ({ match }) {
-    const [postSlug] = useState(match.params.slug);
-    const [post, setPost] = useState({});
-     const [dataLoaded, setDataLoaded] = useState(false);
+    const slug = match.params.slug;
+    let preLoadedPost = JSON.parse(window.sessionStorage.getItem(slug));
+    if (!preLoadedPost) {
+        console.log('no preloaded post')
+        preLoadedPost = null;
+    }
+    const [postSlug] = useState(slug);
+    const [post, setPost] = useState(preLoadedPost);
+    const [dataLoaded, setDataLoaded] = useState(true);
+    
+    const loadPost = useCallback(async () => {
+        if (!preLoadedPost) {
+            console.log("about to make api call")
+            setDataLoaded(false);
+            getAPost(postSlug)
+                .then((data) => {
+                    console.log("making api call for post")
+                    window.sessionStorage.setItem(postSlug, JSON.stringify(data['post']))
+                    setPost(data['post']);
+                })
+                .then(() => { setDataLoaded(true);})
+                .catch((err) => {
+                    console.log(err);
+                });
+                
+        } 
+    },[postSlug, preLoadedPost]);
 
     useEffect(() => {
-        setDataLoaded(false);
-        getAPost(postSlug)
-            .then((data) => {
-                setPost(data['post']);
-            })
-            .then(()=>{setDataLoaded(true)})
-            .catch((err) => {
-                console.log(err);
-            });
-            
-    },[postSlug])
+        loadPost()
+    },[loadPost])
 
     if (!dataLoaded) {
         return (

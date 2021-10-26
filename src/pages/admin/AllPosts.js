@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useCallback} from "react";
 import AdminHeader from "../../components/AdminHeader";
 import Thumbnail from "../../components/Thumbnail";
 import Footer from "../../components/Footer";
@@ -8,24 +8,35 @@ import { getAllPosts } from '../../actions/postActions';
 
 const AllPosts = function () {
     const history = useHistory();
-     const [page, setPage] = useState(1);
-    const [posts, setPosts] = useState([]);
-    const [dataLoaded, setDataLoaded] = useState(false);
+    let preLoadedPosts = JSON.parse(window.sessionStorage.getItem('allposts'));
+    if (!preLoadedPosts) {
+        preLoadedPosts = []
+    }
+    const [page, setPage] = useState(1);
+    const [posts, setPosts] = useState(preLoadedPosts);
+    const [dataLoaded, setDataLoaded] = useState(true);
     const goToEdit = (slug) => {
         history.push(`/admin/update/${slug}`)
     };
-
+    const loadPosts = useCallback(async () => {
+        if (!preLoadedPosts) {
+            setDataLoaded(false);
+            getAllPosts(page)
+                .then((data) => {
+                    console.log("making api call")
+                    window.sessionStorage.setItem('allposts', JSON.stringify(data['posts']))
+                    setPosts(data['posts']);
+                })
+                .then(() => { setDataLoaded(true); })
+                .catch(() => {
+                    console.log('error caught ')
+                });
+        }
+    }, [page, preLoadedPosts]);
+    
     useEffect(() => {
-        setDataLoaded(false);
-        getAllPosts(page)
-            .then((data) => {
-                setPosts(data['posts']);
-            })
-            .then(() => { setDataLoaded(true); })
-            .catch(() => {
-                console.log('error caught ')
-            });
-    }, [page]);
+        loadPosts();
+    }, [loadPosts]);
 
     if (!dataLoaded) {
         return (

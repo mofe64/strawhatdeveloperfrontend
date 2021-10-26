@@ -13,13 +13,20 @@ import Prisim from 'prismjs';
 
 const UpdatePost = function ({ match }) {
     const history = useHistory();
-    const [postSlug] = useState(match.params.slug);
-    const [postToUpdate,setPostToUpdate] = useState({})
+    const slug = match.params.slug;
+    let preLoadedPost = JSON.parse(window.sessionStorage.getItem(slug));
+    if (!preLoadedPost) {
+        console.log('no preloaded post')
+        preLoadedPost = null;
+    };
+    const [postSlug] = useState(slug);
+    const [postToUpdate,setPostToUpdate] = useState(preLoadedPost)
     const editorRef = useRef(null);
     const [loading, setLoading] = useState(false);
     const [value, setValue] = useState('');
 
     const getPostToEdit = useCallback(async () => {
+        if (!preLoadedPost) {
         setLoading(true);
         getAPost(postSlug)
             .then((data) => {
@@ -28,7 +35,8 @@ const UpdatePost = function ({ match }) {
             })
             .then(() => { setLoading(false) })
             .catch(err => { console.log(err) });
-    },[postSlug])
+        } 
+    },[postSlug, preLoadedPost])
     const updatePostValues = (key, value) => {
         const updated = { ...postToUpdate };
         updated[key] = value;
