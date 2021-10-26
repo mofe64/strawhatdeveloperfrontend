@@ -41,7 +41,7 @@ const Post = function ({ match }) {
         loadPost()
     },[loadPost])
 
-    if (!dataLoaded) {
+    if (!post || !dataLoaded) {
         return (
             <>
                 <Header />
